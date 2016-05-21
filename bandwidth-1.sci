@@ -1,19 +1,35 @@
 //author:- Rutuja Moharil & Paresh Yeole  
 //function is to find bandwidth of CT system,DT system,SS system for SISO type of systems only.
-//[fw]=bandwidth(sys,gain) determines the bandwidth of the system
-//if array of siso system is to be passed then call as:-fw=bandwidth(sys,1)
+//[fw]=bandwidth(sys,dbdrop) determines the bandwidth of the system at the given dbdrop. 
+//if array of siso system is to be passed then call as:-fw=bandwidth(sys,dbdrop,1)
+//"dbdrop must be negative value"
+//calling sequence:-
+//fw=bandwidth(sys)   ----for SISO transfer function CT,DT and state space --dbdrop=-3db
+//fw=bandwidth(sys,dbdrop) --computes bandwidth at given dbdrop
+//fw=bandwidth(sys,[],1)   --for SISO array --dbdrop=-3db
+//fw=bandwidth(sys,dbdrop,1) ---for SISO array at given dbdrop
 function[fw]=bandwidth(sys,varargin)
    //[lhs,rhs]=argn(0);
+   n=length(varargin);
+   if(n==0 | (n==2 & varargin(1)==[]))  then
+       dbdrop=0.7079;
+   //if(varargin(1)==[]) then
+       //dbdrop=0.7079;
+   elseif(n==1 | n==2) then
+      dbdrop=10^(varargin(1)/20);
+       end
    select typeof(sys)
 case "rational" then
-    if(varargin(1)==1) then
+    if(n==2 & varargin(2)==1) then
     o=0;
+    //disp("cheenu");
       else
        o=1;
       end
     
 case "state-space" then
         sys=ss2tf(sys)
+        o=1;
 else
         msprintf("\n")
         error(97,1),
@@ -57,7 +73,7 @@ end
 //   else 
 niw=(((horner(sys.num,%i*w))))*(conj(horner(sys.num,%i*w)));
 diw=(((horner(sys.den,%i*w))))*(conj(horner(sys.den,%i*w)));
-p=(roots(niw-((t*0.7079)^2)*diw));
+p=(roots(niw-((t*dbdrop)^2)*diw));
 fw=real(p(find((abs(imag(p))<el)&real(p)>0)));
 //end
 else
@@ -72,8 +88,8 @@ else
                 t=horner(sys(i,j,k),0);
           
 catch
-    fw=%nan;
-         return;
+    fw(i,j,k)=%nan;
+        continue;
 end
  
 //                    if(isinf(t)) then
@@ -84,7 +100,7 @@ end
     //else
             niw=(((horner(sys(i,j,k).num,%i*w))))*(conj(horner(sys(i,j,k).num,%i*w)));
 diw=(((horner(sys(i,j,k).den,%i*w))))*(conj(horner(sys(i,j,k).den,%i*w)));
-p=(roots(niw-((t*0.7079)^2)*diw));
+p=(roots(niw-((t*dbdrop)^2)*diw));
 fw(i,j,k)=real(p(find((abs(imag(p))<el)&real(p)>0)));
 
 //end
@@ -101,8 +117,8 @@ else
                 t=horner(sys(i,j),0);
           
 catch
-      fw=%nan;
-       return;
+      fw(i,j)=%nan;
+       continue;
       end
 
     //if(isinf(t)) then
@@ -113,8 +129,8 @@ catch
 //    else
            niw=(((horner(sys(i,j).num,%i*w))))*(conj(horner(sys(i,j).num,%i*w)));
 diw=(((horner(sys(i,j).den,%i*w))))*(conj(horner(sys(i,j).den,%i*w)));
-p=(roots(niw-((t*0.7079)^2)*diw));
-fw(i,j,k)=real(p(find((abs(imag(p))<el)&real(p)>0)));
+p=(roots(niw-((t*dbdrop)^2)*diw));
+fw(i,j)=real(p(find((abs(imag(p))<el)&real(p)>0)));
 end
 end
 end
@@ -140,7 +156,7 @@ t=horner(sys,1);
 z=poly(0,varn(sys.den));
         sm=simp_mode();
         simp_mode(%f);
-        hh=sys*horner(sys,1/z)-(t*0.7079)^2;
+        hh=sys*horner(sys,1/z)-(t*dbdrop)^2;
     
         simp_mode(sm);
         //find the numerator roots
