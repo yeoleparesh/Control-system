@@ -77,7 +77,7 @@ p=(roots(niw-((t*dbdrop)^2)*diw));
 fw=real(p(find((abs(imag(p))<el)&real(p)>0)));
 //end
 else
-    y=ndims(aa);
+    y=ndims(sys);
     //if(y>2)then
         if(y==3) then
     for i=1:size(sys,'r')
