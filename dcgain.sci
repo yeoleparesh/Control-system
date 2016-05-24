@@ -22,6 +22,7 @@ function[x]=dcgain(p)
                   x(i,j,k).entries=horner(p(i,j,k),0);
               catch
                   x(i,j,k)=%inf;
+                  continue;
                   end
                   end
              end
@@ -44,6 +45,7 @@ else
                   x(i,j,k).entries=horner(p(i,j,k),1);
               catch
                   x(i,j,k)=%inf;
+                  continue;
                   end
                   end
              end
