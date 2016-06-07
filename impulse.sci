@@ -157,6 +157,7 @@ function[varargout]=impulse(varargin)
             
             if typeof(varargin(i))=='state-space' then
                 varargin(i)=ss2tf(varargin(i));
+                
             end
             
             /////////////////////////SISO system//////////////////////////////
@@ -176,9 +177,10 @@ function[varargout]=impulse(varargin)
                  //ch=find(y>=10^12 | y<=-10^12);
                  //disp(ch);
                   if((varargin(i).dt)<>'c') then
-                     //t=0:varargin(i).dt:t(ch(1));
-                     t=0:varargin(i).dt:100;
+                    // t=0:varargin(i).dt:t(ch(1));
+                    t=0:varargin(i).dt:100;
                   else
+                     //t=0:0.1:t(ch(1))
                      t=0:0.1:100;
                   end
              elseif and(ppr<=0) then
@@ -254,9 +256,9 @@ function[varargout]=impulse(varargin)
                 y=flts(eye(1,length(t)),tt(ii,jj,kk));
             end
               if or(ppr > 0) then
-                 //ch=find(y>10^8 | y<-10^8);
-                  temp=100;
-                  //temp=t(ch(1));
+                 ch=find(y>10^8 | y<-10^8);
+                  //temp=100;
+                  temp=t(ch(1));
              elseif and(ppr<=0) then
                 for iii=length(t):-1:1
                   if(y(iii)<-0.002 | y(iii)>0.002) then
