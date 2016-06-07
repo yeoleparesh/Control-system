@@ -215,5 +215,8 @@ else
         //if fw=[] then it means either the bandwidth is finite or band
 //end
 end
+if(fw==[]) then
+    fw=%inf;
+    end;
 endfunction
     
