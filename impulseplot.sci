@@ -166,9 +166,12 @@ function [o]=impulseplot(varargin)
              if or(ppr > 0) then
                  ch=find(y>=10^12 | y<=-10^12);
                   if((varargin(i).dt)<>'c') then
-                     t=0:varargin(i).dt:t(ch(1));
+                     //t=0:varargin(i).dt:t(ch(1));
+                     t=0:varargin(i).dt:t($);
                   else
-                     t=0:0.1:t(ch(1))
+                     //t=0:0.1:t(ch(1))
+                     t=0:0.1:t($);
+
                   end
              elseif and(ppr<=0) then
                 
