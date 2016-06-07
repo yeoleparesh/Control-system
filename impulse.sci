@@ -173,12 +173,13 @@ function[varargout]=impulse(varargin)
                 y=flts(eye(1,length(t)),varargin(i));
             end
              if or(ppr > 0) then
-                 ch=find(y>=10^12 | y<=-10^12);
+                 //ch=find(y>=10^12 | y<=-10^12);
                  //disp(ch);
                   if((varargin(i).dt)<>'c') then
-                     t=0:varargin(i).dt:t(ch(1));
+                     //t=0:varargin(i).dt:t(ch(1));
+                     t=0:varargin(i).dt:100;
                   else
-                     t=0:0.1:t(ch(1))
+                     t=0:0.1:100;
                   end
              elseif and(ppr<=0) then
                 
@@ -230,7 +231,7 @@ function[varargout]=impulse(varargin)
        
     
         ////////////////SISO array///////////////////////////
-     elseif typeof(varargin(i))=='rational' & size(varargin(i),'*')<>1 & rhs<>1 & typeof(varargin(i+1))=='boolean' then
+     elseif typeof(varargin(i))=='rational' & size(varargin(i),'*')<>1 & i<>rhs & rhs<>1 & typeof(varargin(i+1))=='boolean' then
          if(varargin(i+1)<>%T   ) then
              error(msprintf("impulse:wrong input arguments"));
          end
@@ -253,9 +254,9 @@ function[varargout]=impulse(varargin)
                 y=flts(eye(1,length(t)),tt(ii,jj,kk));
             end
               if or(ppr > 0) then
-                 ch=find(y>10^8 | y<-10^8);
-                  //temp=100;
-                  temp=t(ch(1));
+                 //ch=find(y>10^8 | y<-10^8);
+                  temp=100;
+                  //temp=t(ch(1));
              elseif and(ppr<=0) then
                 for iii=length(t):-1:1
                   if(y(iii)<-0.002 | y(iii)>0.002) then
