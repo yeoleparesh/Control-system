@@ -1,10 +1,15 @@
 //Author:- Paresh Yeole emailid:-yeoleparesh@students.vnit.ac.in
 //
-
-
-
-
-
+//
+//calling sequence:-
+//impulse(sys)
+//impulse(sys,Tfinal)
+//impulse(sys,Tvector)
+//impulse(sys1,sys2,...,T)
+//impulse(sys1,'r',sys2,'y--',sys3,'gx',..)
+//[y,t]=impulse(sys)
+//For state-space models, [Y,T,X] = impulse(SYS, ...) 
+//Response uncertainty computation: [Y,T,X,YSD] = impulse(SYS)
 
 
 
@@ -63,18 +68,7 @@ function[varargout]=impulse(varargin)
                 tempTimeIndex = find(varargin($) >= 0) //finding the positive no.'s index in the vector
                 if isequal(size(varargin($)),size(tempTimeIndex)) == %t then
                     temp=varargin($);
-                    if ((typeof(varargin(1))<>['polynomial']) & (varargin(1).dt<>'c')) then
-                        if(varargin(1).dt=='d') then
-                            dt=1;
-                        else
-                            dt=varargin(1).dt;
-                            end
-                            if(dt<>(temp(2)-temp(1))) then
-                            error(msprintf("impulse: for discrete time system the vector difference must be equal to the sample time of the system"));
-                            end
-                            
-                        end
-                                          t = varargin($)
+                   t = varargin($)
                 else
                     tempTime=varargin($);
                     tempTime = tempTime(tempTimeIndex(1):tempTimeIndex($))
@@ -98,16 +92,19 @@ function[varargout]=impulse(varargin)
         end
     end
     
-    printf("\n%d,%d",max(xx1),max(yy1));
+    /////////////////////////////////printf("\n%d,%d",max(xx1),max(yy1));
     
-    
+    CIindex=1;
     if lhs==1 then
         for i=1:rhs
+            CIindex=CIindex+1;
             I=1;
-            if(varargin(i).dt<>'c') then
-            if((typeof(varargin($))=='constant') & (size(varargin($)) <> [1 1]) & varargin(i).dt<>(t(2)-t(1))) then
+            if(or(typeof(varargin(i))==['rational','state-space']) & ((varargin(i).dt)<>'c')) then
+                //printf("hi");
+            if((typeof(varargin($))=='constant') & (size(varargin($)) <> [1 1]) & ((varargin(i).dt)<>(t(2)-t(1)))) then
             error(msprintf("sampling time of the given system must match the step of the vector"));
-        else
+        elseif((typeof(varargin($))=='constant') & (size(varargin($)) == [1 1])) then
+            
             temptime=t;
             if(varargin(i).dt=='d') then
                 dt=1
@@ -115,7 +112,19 @@ function[varargout]=impulse(varargin)
                 dt=varargin(i).dt
             end
             
-            t=0:varargin(i).dt:temptime($);
+            t=0:varargin(i).dt:varargin($);
+        else
+            //temptime=t;
+            if(varargin(i).dt=='d') then
+                dt=1;
+            else
+               
+                dt=varargin(i).dt;
+            end
+            
+            t=0:varargin(i).dt:t($);
+       
+            
             end
             
             end
@@ -123,21 +132,29 @@ function[varargout]=impulse(varargin)
             if typeof(varargin(i))=='state-space' then
                 varargin(i)=ss2tf(varargin(i));
             end
-        if typeof(varargin(i))=='rational' & size(varargin(i),'*')==1 then
+            
+            /////////////////////////SISO system//////////////////////////////
+        if((typeof(varargin(i))=='rational') & (size((varargin(i)),'*')==1)) then
         //sysI=sysI+1;
         
          if flag<>1 then
              pp=pole(varargin(i))
              pp=cell2mat(pp);
               ppr=real(pp)
-             if or(ppr >= 0) then
-                  t=0:0.1:100
-             elseif and(ppr<0) then
-                 if(varargin(i).dt=='c') then
+               if(varargin(i).dt=='c') then
                 y=csim('impuls',t,varargin(i));
             else
                 y=flts(eye(1,length(t)),varargin(i));
             end
+             if or(ppr >= 0) then
+                 ch=find(y>=10^30);
+                  if((varargin(i).dt)<>'c') then
+                     t=0:varargin(i).dt:t(ch(1)-1);
+                  else
+                     t=0:0.1:t(ch(1)-1)
+                  end
+             elseif and(ppr<0) then
+                
                 //y=csim('impuls',t,varargin(i));
                  for iii=length(t):-1:1
                   if(y(iii)<-0.002 | y(iii)>0.002) then
@@ -147,18 +164,25 @@ function[varargout]=impulse(varargin)
 //                      break;
 //                  end;
                   
+              end
+              if((varargin(i).dt)<>'c') then
+                  t=0:varargin(i).dt:(iii-1)*0.1;
+                  else
+                      
+                   t=0:0.1:(iii-1)*0.1;
                   end
-                    t=0:0.1:(iii-1)*0.1; 
+                     
                 end
              end
-             if (i==1) then
-                 if (varargin(i).dt=='c') then
-                     varargout(1)=(csim('impuls',t,varargin(1)))';
-                 else
-                     varargout(1)=(flts(eye(1,length(t)),varargin(i)))';
-                 end
-            // varargout(1)=(csim('impuls',t,varargin(1)))';
-         end
+             varargout(1)="IMPULSE_PLOT";
+//             if (i==1) then
+//                 if (varargin(i).dt=='c') then
+//                     varargout(1)=(csim('impuls',t,varargin(1)))';
+//                 else
+//                     varargout(1)=(flts(eye(1,length(t)),varargin(i)))';
+//                 end
+//            // varargout(1)=(csim('impuls',t,varargin(1)))';
+//         end
          if i<>rhs & typeof(varargin(i+1))=='string'  then
            if (varargin(i).dt=='c') then
            G=csim('impuls',t,varargin(i));
@@ -166,7 +190,11 @@ function[varargout]=impulse(varargin)
           G=flts(eye(1,length(t)),varargin(i));
        end
        subplot(max(xx1),max(yy1),I);
-         plot(t,G,varargin(i+1));
+       plot(t,G,varargin(i+1));
+       if (varargin(i).dt<>'c') then
+          hh=gce();
+         hh.children.polyline_style=2;  
+         end
         else
             if (varargin(i).dt=='c') then
            G=csim('impuls',t,varargin(i));
@@ -174,37 +202,46 @@ function[varargout]=impulse(varargin)
           G=flts(eye(1,length(t)),varargin(i));
        end
        subplot(max(xx1),max(yy1),I);
-         plot(t,G);
+       plot(t,G);
+       hh=gce();
+       hh.children.foreground=CIindex;
+       if (varargin(i).dt<>'c') then
+       
+         hh.children.polyline_style=2;  
+       end
+      
         end
-        
+       
     
-        
-     elseif typeof(varargin(i))=='rational' & size(varargin(i),'*')<>1 & typeof(varargin(i+1))=='boolean' then
+        ////////////////SISO array///////////////////////////
+     elseif typeof(varargin(i))=='rational' & size(varargin(i),'*')<>1 & rhs<>1 & typeof(varargin(i+1))=='boolean' then
          if(varargin(i+1)<>%T   ) then
              error(msprintf("impulse:wrong input arguments"));
          end
          
         xx=size(varargin(i),'r');
         yy=size(varargin(i),'c');
+        zz=size(varargin(i),3);
         tt=varargin(i);
         I=1;
         if flag<>1 then
             for ii=1:xx
                  for jj=1:yy
+                     for kk=1:zz 
              pp=pole(tt(ii,jj))
              pp=cell2mat(pp);
               ppr=real(pp)
-              if or(ppr >= 0) then
-                  temp=100;
-             elseif and(ppr<0) then
-             
-                     if(varargin(i).dt=='c') then
-                y=csim('impuls',t,tt(ii,jj));
+                 if(varargin(i).dt=='c') then
+                y=csim('impuls',t,tt(ii,jj,kk));
             else
-                y=flts(eye(1,length(t)),tt(ii,jj));
+                y=flts(eye(1,length(t)),tt(ii,jj,kk));
             end
-            
-                 for iii=length(t):-1:1
+              if or(ppr > 0) then
+                 ch=find(y>10^30);
+                  //temp=100;
+                  temp=t(ch(1));
+             elseif and(ppr<=0) then
+                for iii=length(t):-1:1
                   if(y(iii)<-0.002 | y(iii)>0.002) then
                       break; 
                   end;
@@ -216,47 +253,68 @@ function[varargout]=impulse(varargin)
                     temp(ii,jj)=(iii-1)*0.1;
                     end 
                 end
+                end
             end
-            t=0:0.1:max(temp);
+            if((varargin(i).dt)<>'c') then
+                  t=0:varargin(i).dt:max(temp);
+                  else
+                      
+                   t=0:0.1:max(temp);
+                  end
+            //t=0:0.1:max(temp);
              end
-        if i<>rhs & typeof(varargin(i+2))=='string'  then
+        if i<rhs-1 & typeof(varargin(i+2))=='string'  then
         for ii=1:xx
           for jj=1:yy
+              for kk=1:zz
               if(varargin(i).dt=='c') then
-          G=csim('impuls',t,tt(ii,jj));
+          G=csim('impuls',t,tt(ii,jj,kk));
       else
-          G=flts(eye(1,length(t)),tt(ii,jj));
+          G=flts(eye(1,length(t)),tt(ii,jj,kk));
           end
-         //subplot(max(xx1),max(yy1),I)
+         //subplot(max(xx1),max(yy1),1)
          title(msprintf(gettext("input(1)-output(1)")));
          plot(t,G,varargin(i+2));
+         hh=gce();
+         if(varargin(i).dt<>'c') then
+         
+         hh.children.polyline_style=2;
+         end
+     
          //I=I+1;
           end
-          
+          end
         end
+        
     else
         for ii=1:xx
           for jj=1:yy
+              for kk=1:zz
               if(varargin(i).dt=='c') then
-          G=csim('impuls',t,tt(ii,jj));
+          G=csim('impuls',t,tt(ii,jj,kk));
       else
-          G=flts(eye(1,length(t)),tt(ii,jj))
+          G=flts(eye(1,length(t)),tt(ii,jj,kk))
           end
-         //subplot(max(xx1),max(yy1),I)
+        // subplot(max(xx1),max(yy1),1)
          //vv=msprintf(gettext("input(%d)-output(%d)"),ii,jj);
          title(msprintf(gettext("input(1)-output(1)")));
         // ylabel("output(%d)",jj);
-         
          plot(t,G);
+         hh=gce();
+         hh.children.foreground=CIindex;
+         if(varargin(i).dt<>'c') then
+         
+         hh.children.polyline_style=2;
+        end
          //I=I+1;
           end
-          
+          end
         end
         end
         
-        
-   
-    elseif typeof(varargin(i))=='rational' & size(varargin(i),'*')<>1 then
+        varargout(1)="IMPULSE_PLOT";
+   /////////////////////////////MIMO-system////////////////////////
+    elseif ((typeof(varargin(i))=='rational') & (size(varargin(i),'*')<>1)) then
         xx=size(varargin(i),'r');
         yy=size(varargin(i),'c');
         tt=varargin(i);
@@ -267,30 +325,31 @@ function[varargout]=impulse(varargin)
              pp=pole(tt(ii,jj))
              pp=cell2mat(pp);
               ppr=real(pp)
-              if or(ppr >= 0) then
-                  temp=100;
-             elseif and(ppr<0) then
-             
-                     if(varargin(i).dt=='c') then
+               if(varargin(i).dt=='c') then
                 y=csim('impuls',t,tt(ii,jj));
             else
                 y=flts(eye(1,length(t)),tt(ii,jj));
             end
-            
-                 for iii=length(t):-1:1
+              if or(ppr >= 0) then
+                  ch=find(y>=10^30);
+                  temp=t(ch(1)-1);
+             elseif and(ppr<0) then
+                for iii=length(t):-1:1
                   if(y(iii)<-0.002 | y(iii)>0.002) then
                       break; 
                   end;
-//                  if(y(iii)<=10^4) then
-//                      break;
-//                  end;
 //                  
                   end
                     temp(ii,jj)=(iii-1)*0.1;
                     end 
                 end
             end
-            t=0:0.1:max(temp);
+            if((varargin(i).dt)<>'c') then
+                  t=0:varargin(i).dt:max(temp);
+                  else
+                      
+                   t=0:0.1:max(temp);
+                  end
              end
         if i<>rhs & typeof(varargin(i+1))=='string'  then
         for ii=1:xx
@@ -303,6 +362,10 @@ function[varargout]=impulse(varargin)
          subplot(max(xx1),max(yy1),I)
          title(msprintf(gettext("input(%d)-output(%d)"),ii,jj));
          plot(t,G,varargin(i+1));
+        if(varargin(i).dt<>'c') then
+        hh=gce();
+         hh.children.polyline_style=2;
+         end
          I=I+1;
           end
           
@@ -319,16 +382,26 @@ function[varargout]=impulse(varargin)
          //vv=msprintf(gettext("input(%d)-output(%d)"),ii,jj);
          title(msprintf(gettext("input(%d)-output(%d)"),ii,jj));
         // ylabel("output(%d)",jj);
-         
          plot(t,G);
+         hh=gce();
+         hh.children.foreground=CIindex;
+         if(varargin(i).dt<>'c') then
+         
+         hh.children.polyline_style=2;
+         end
          I=I+1;
           end
            end
         end
-        end
+    end
+    varargout(1)="IMPULSE_PLOT";
         end
    // end
     //lhs > 1
+    h=gcf();
+    h.figure_name= "IMPULSE-PLOT"; 
+    
+    ///////////////////more than 1 o/p arguments/////////////////////////////////////////////////////////
 elseif lhs>1 then
         
    //varargout(1)=(csim('impuls',t,varargin(1)))';
@@ -337,6 +410,11 @@ elseif lhs>1 then
         op1=cell(xx,yy);
         op2=cell(xx,yy);
         tt=varargin(1);
+//        if(typeof(tt)=='state-space') then
+//        [a b c d]=abcd(tt(ii,jj));
+//        tt(ii,jj)=
+//        end
+//        
          for ii=1:xx
                  for jj=1:yy
                      if(varargin(1).dt=='c') then
@@ -435,166 +513,10 @@ end
     
     
     
+   
     
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-//    if rhs == 0 | (rhs == 1 & typeof(varargin($)) <> ['state-space', 'rational'] | (rhs == 1 & size(varargin($)) == [0 0])) then
-//        error(msprintf(gettext("%s: Wrong type for input argument \n#%d: State-space or transfer function of linear system expected.\n"),"impulse",1))
-//    end
-//    if typeof(varargin(1)) <> ['state-space','rational'] then
-//        error(msprintf(gettext("%s: Wrong type for first input argument\n#%d: State-space or transfer function expected.\n"),"impulse",1))
-//    end
-//    
-//    //determining the time 
-//    t = 0:0.1:1000-0.1; 
-//    if rhs > 1 then
-//        if typeof(varargin($)) == 'constant' then
-//            if size(varargin($)) == [1 1] then
-//                if varargin($) <= 0 then
-//                    error(msprintf(gettext("%s: The final time value must be a positive real number.\n"),"impulse"))
-//                end
-//                tFinal = varargin($)
-//                t =0:0.01:tFinal; 
-//            elseif isequal(size(varargin($)),[1 1]) == %f then
-//                // finding that the time vector has positive time value
-//                if(and(diff(varargin($)<0))) then  //if time vector is not monotonically increasing
-//                    error(msprintf("impulse: the time vector must be real, finite, and must contain monotonically increasing and evenly spaced time samples."));
-//                end
-//                
-//                tempTimeIndex = find(varargin($) >= 0) //finding the positive no.'s index in the vector
-//                if isequal(size(varargin($)),size(tempTimeIndex)) == %t then
-//                    t = varargin($)
-//                else
-//                    tempTime=varargin($);
-//                    tempTime = tempTime(tempTimeIndex(1):tempTimeIndex($))
-//                    t = tempTime
-//                end
-//            end
-//        end
-//    end
-//    
-//    //for n systems and formatting
-//    if rhs >= 1 then
-//        if typeof(varargin($)) == 'constant' then
-//            vararginIndex = rhs-1
-//        else
-//            vararginIndex = rhs
-//        end
-//    end
-//    
-//    DI=1;//DATA-index-no.
-//    currentI = 1
-//    previousI = 0
-//    colorIndexNumber = 1
-//    colorIndex = []
-//    
-//    for i=1:vararginIndex
-//        printf("cheenu");
-//        if typeof(varargin(i)) == 'state-space' | typeof(varargin(i)) == 'rational' then
-//        D(DI,1)=i;
-//        tempsize=size(varargin(i));
-//        if typeof(varargin(ii)) == 'state-space' then
-//                outputSize(DI,1) = tempsize(1,1) 
-//                inputSize(DI,1) = tempsize(1,2)
-//             elseif typeof(varargin(ii)) == 'rational' then
-//                 if isequal(tempsize,[1 1]) == %f & length(tempsize) == 2 then
-//                     outputSize(DI,1) = tempsize(1,1) 
-//                     inputSize(DI,1) = tempsize(1,2)
-//                 else
-//                     outputSize(DI,1) = 1 
-//                     inputSize(DI,1) = 1
-//                 end
-//        end
-//        
-//        if i==rhs then
-//            tempi=rhs
-//        else
-//             tempi=i+1;
-//        end
-//        
-//        if typeof(varargin(tempi)) == 'string' then
-//        currentI = i+1
-//                        if currentI == previousI+1 then
-//                            error(msprintf(gettext("%s: Incorrect syntax.\n"),"stepplot"))
-//                        end
-//                    previousI = currentI
-//                    colorIndex(DI,1) = ii+1
-//                else
-//                    colorIndex(DI,1) = 0
-//                 end
-//             
-//         
-//        end
-//        DI = DI + 1
-//    end
-//    end
-//    
-//    if isequal(zeros(length(D),1),colorIndex) == %f then
-//        [colorIndex newIndex] = gsort(colorIndex,'r')
-//        dataIndex = dataIndex(newIndex(:,1),1)
-//    end
-//    
-//    
-//    
-//    
-//    
-//    
-//    
-//    
-//    
-//    
-//    
-//    //for variable outputs
-//   
-//    //t=0:0.1:10;
-//    //p=diracdelta(t);
-//    select argn(1)
-//     case 1 then
-//         varargout(1)=(csim('impuls',t,varargin(1)))';
-//         G=csim('impuls',t,varargin(1));
-//         plot(t,G);
-// 
-//    case 2 then
-//        varargout(1)=(csim('impuls',t,varargin(1)))';
-//        varargout(2)=t';
-//    case 3 then
-//        varargout(1)=(csim('impuls',t,varargin(1)))';
-//       varargout(2)=t';
-//        if(typeof(sys)=='state-space') then
-//            varargout(3)=1;
-//        else
-//            varargout(3)=[];
-//        end
-//    case 4 then
-//        varargout(1)=(csim('impuls',t,varargin(1)))';
-//       varargout(2)=t';
-//        if(typeof(sys)=='state-space') then
-//            varargout(3)=1;
-//            varargout(4)=stdev(varargout(1));
-//        else
-//            varargout(3)=[];
-//            varargout(4)=[];
-//        end
-//        
-//    end
-    
-   // end
-   //G=csim('impuls',t,sys);
-//diw=(((horner(sys.den,%i*2*%pi*(1/t)))))*(conj(horner(sys.den,%i*2*%pi*(1/t))));
-//mag=sqrt(nn.*mm);
-//plot(t,G);
+
 endfunction
