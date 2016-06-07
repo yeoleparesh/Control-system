@@ -172,14 +172,15 @@ function[varargout]=impulse(varargin)
             else
                 y=flts(eye(1,length(t)),varargin(i));
             end
-             if or(ppr >= 0) then
-                 ch=find(y>=10^30);
+             if or(ppr > 0) then
+                 ch=find(y>=10^12 | y<=-10^12);
+                 //disp(ch);
                   if((varargin(i).dt)<>'c') then
-                     t=0:varargin(i).dt:t(ch(1)-1);
+                     t=0:varargin(i).dt:t(ch(1));
                   else
-                     t=0:0.1:t(ch(1)-1)
+                     t=0:0.1:t(ch(1))
                   end
-             elseif and(ppr<0) then
+             elseif and(ppr<=0) then
                 
                 //y=csim('impuls',t,varargin(i));
                  for iii=length(t):-1:1
@@ -252,7 +253,7 @@ function[varargout]=impulse(varargin)
                 y=flts(eye(1,length(t)),tt(ii,jj,kk));
             end
               if or(ppr > 0) then
-                 ch=find(y>10^30);
+                 ch=find(y>10^8 | y<-10^8);
                   //temp=100;
                   temp=t(ch(1));
              elseif and(ppr<=0) then
@@ -323,7 +324,8 @@ function[varargout]=impulse(varargin)
         
         varargout(1)="IMPULSE_PLOT";
    /////////////////////////////MIMO-system////////////////////////
-    elseif ((typeof(varargin(i))=='rational') & (size(varargin(i),'*')<>1)) then
+elseif ((typeof(varargin(i))=='rational') & (size(varargin(i),'*')<>1)) then
+    
         xx=size(varargin(i),'r');
         yy=size(varargin(i),'c');
         tt=varargin(i);
@@ -339,10 +341,12 @@ function[varargout]=impulse(varargin)
             else
                 y=flts(eye(1,length(t)),tt(ii,jj));
             end
-              if or(ppr >= 0) then
-                  ch=find(y>=10^30);
-                  temp=t(ch(1)-1);
-             elseif and(ppr<0) then
+              if or(ppr > 0) then
+                  //ch=find(y>=10^12 | y<=-10^12);
+                  //temp=t(ch(1));
+                  //disp(temp);
+                 temp=100;
+              elseif and(ppr<=0) then
                 for iii=length(t):-1:1
                   if(y(iii)<-0.002 | y(iii)>0.002) then
                       break; 
