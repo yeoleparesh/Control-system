@@ -223,7 +223,7 @@ function [o]=impulseplot(varargin)
        
     
         ////////////////SISO array///////////////////////////
-     elseif typeof(varargin(i))=='rational' & size(varargin(i),'*')<>1 & rhs<>1 & typeof(varargin(i+1))=='boolean' then
+     elseif typeof(varargin(i))=='rational' & size(varargin(i),'*')<>1 & i<>rhs & rhs<>1 & typeof(varargin(i+1))=='boolean' then
          if(varargin(i+1)<>%T   ) then
              error(msprintf("impulse:wrong input arguments"));
          end
