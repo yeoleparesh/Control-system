@@ -45,6 +45,9 @@ function[varargout]=impulse(varargin)
 
 
     [lhs,rhs]=argn(0);
+    if rhs == 0 then
+        error(msprintf(gettext("Not enough input arguments")))
+        end
     nd=length(varargout);
     ni=length(varargin);
     flag=0;
@@ -176,12 +179,14 @@ function[varargout]=impulse(varargin)
              if or(ppr > 0) then
                  //ch=find(y>=10^12 | y<=-10^12);
                  //disp(ch);
+                 dompol=max(ppr);
+                 tfinal=25/(dompol*log10(%e));
                   if((varargin(i).dt)<>'c') then
                     // t=0:varargin(i).dt:t(ch(1));
-                    t=0:varargin(i).dt:100;
+                    t=0:varargin(i).dt:tfinal;
                   else
                      //t=0:0.1:t(ch(1))
-                     t=0:0.1:100;
+                     t=0:0.1:tfinal;
                   end
              elseif and(ppr<=0) then
                 
@@ -256,9 +261,12 @@ function[varargout]=impulse(varargin)
                 y=flts(eye(1,length(t)),tt(ii,jj,kk));
             end
               if or(ppr > 0) then
-                 ch=find(y>10^8 | y<-10^8);
-                  //temp=100;
-                  temp=t(ch(1));
+                  dompol=max(ppr);
+                 tfinal=25/(dompol*log10(%e));
+                 temp(ii,jj)=tfinal;
+//                 ch=find(y>10^8 | y<-10^8);
+//                  //temp=100;
+//                  temp=t(ch(1));
              elseif and(ppr<=0) then
                 for iii=length(t):-1:1
                   if(y(iii)<-0.002 | y(iii)>0.002) then
@@ -348,7 +356,9 @@ elseif ((typeof(varargin(i))=='rational') & (size(varargin(i),'*')<>1)) then
                   //ch=find(y>=10^12 | y<=-10^12);
                   //temp=t(ch(1));
                   //disp(temp);
-                 temp=100;
+                  dompol=max(ppr);
+                 tfinal=25/(dompol*log10(%e));
+                 temp(ii,jj)=tfinal;
               elseif and(ppr<=0) then
                 for iii=length(t):-1:1
                   if(y(iii)<-0.002 | y(iii)>0.002) then
@@ -464,7 +474,9 @@ if(typeof(varargin(1))=='polynomial') then
              pp=cell2mat(pp);
               ppr=real(pp)
              if or(ppr >= 0) then
-                  t=0:0.1:100
+                 dompol=max(ppr);
+                 tfinal=25/(dompol*log10(%e));
+                  t=0:0.1:tfinal;
              elseif and(ppr<0) then
                 y=csim('impuls',t,varargin(1)/varargin(2));
                  for iii=length(t):-1:1
