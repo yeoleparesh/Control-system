@@ -1,11 +1,15 @@
-//author:- Paresh Yeole
+function[num,den,Ts]=tfdata(p)
+    //author:- Paresh Yeole
 //[num,den,Ts] = tfdata(sys) returns coefficients of the numerator(s) and denominator(s) of the transfer function for the TF, SS and the sampling time of the system.
 //function -- tfdata(TRANSFER FUNCTION)
 //sampling time of the system can also be find out.
+//SISO , MIMO ,state-space,array of SISO,discrete time tf can be passed as a system to this function
+//o/p is the cell array of the coefficients for MIMO and SISO arrays.
 
-
-
-function[num,den,Ts]=tfdata(p)
+    [lhs,rhs]=argn(0)
+    if rhs == 0 then
+        error(msprintf(gettext("Not enough input arguments")))
+        end
     select typeof(p)
     case "rational" then
     case "state-space" then
