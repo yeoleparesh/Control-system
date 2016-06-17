@@ -1,4 +1,5 @@
-//author:-Paresh Yeole
+function[w]=lyapchol(a,b,e)
+    //author:-Paresh Yeole
 //Dt:-May/2016
 //lyapnov function Compute Cholesky factor of "continuous-time" Lyapunov equations.
 
@@ -10,13 +11,11 @@
 //R=lyapchol(A,B,E)
 //A X E'  +  E XA'  +  B B'  =  0      (Generalized Lyapunov Equation)
 //X=R*R'
-
-
-
-
-
-
-function[w]=lyapchol(a,b,e)
+[lhs rhs]=argn(0);
+    if rhs<2  then
+        error(msprintf(gettext("Not enough input arguments")));
+    end
+    
 select argn(2)
 case 2 then
     if(size(a)<>size(a')) then
