@@ -29,13 +29,13 @@ function [o]=impulseplot(varargin)
 ////Examples:-
 //s=poly(0,'s');
 //sys=syslin('c',(s+3)/(s^3+4*s+2));
-//impulse(sys)   plots the impulse response of sys
+//impulseplot(sys)   plots the impulse response of sys
 //sys1=ssrand(2,3,4);
-//impulse(sys1)
-//impulse(sys,sys1)
-//impulse(sys,'--r',sys1,'gx')
+//impulseplot(sys1)
+//impulseplot(sys,sys1)
+//impulseplot(sys,'--r',sys1,'gx')
 //aa=pid(rand(2,3,4),2,3,4);
-//impulse(aa,%T)
+//impulseplot(aa,%T)
   
     [lhs,rhs]=argn(0);
   
@@ -164,13 +164,15 @@ function [o]=impulseplot(varargin)
                 y=flts(eye(1,length(t)),varargin(i));
             end
              if or(ppr > 0) then
-                 ch=find(y>=10^12 | y<=-10^12);
+                 //ch=find(y>=10^12 | y<=-10^12);
+                 dompol=max(ppr);
+                 tfinal=25/(dompol*log10(%e));
                   if((varargin(i).dt)<>'c') then
                      //t=0:varargin(i).dt:t(ch(1));
-                     t=0:varargin(i).dt:t($);
+                     t=0:varargin(i).dt:tfinal;
                   else
                      //t=0:0.1:t(ch(1))
-                     t=0:0.1:t($);
+                     t=0:0.1:tfinal;
 
                   end
              elseif and(ppr<=0) then
@@ -223,7 +225,8 @@ function [o]=impulseplot(varargin)
        
     
         ////////////////SISO array///////////////////////////
-     elseif typeof(varargin(i))=='rational' & size(varargin(i),'*')<>1 & i<>rhs & rhs<>1 & typeof(varargin(i+1))=='boolean' then
+
+     elseif typeof(varargin(i))=='rational' & size(varargin(i),'*')<>1 &  i<>rhs & rhs<>1 & typeof(varargin(i+1))=='boolean' then
          if(varargin(i+1)<>%T   ) then
              error(msprintf("impulse:wrong input arguments"));
          end
@@ -247,7 +250,9 @@ function [o]=impulseplot(varargin)
             end
               if or(ppr > 0) then
                  //ch=find(y>10^30);
-                  temp=100;
+                  dompol=max(ppr);
+                 tfinal=25/(dompol*log10(%e));
+                 temp(ii,jj)=tfinal;
                   //temp=t(ch(1));
              elseif and(ppr<=0) then
                 for iii=length(t):-1:1
@@ -336,7 +341,9 @@ function [o]=impulseplot(varargin)
               if or(ppr > 0) then
                   //ch=find(y>=10^30);
                   //temp=t(ch(1)-1);
-                  temp=100;
+                  dompol=max(ppr);
+                 tfinal=25/(dompol*log10(%e));
+                 temp(ii,jj)=tfinal;
              elseif and(ppr<=0) then
                 for iii=length(t):-1:1
                   if(y(iii)<-0.002 | y(iii)>0.002) then
@@ -407,7 +414,9 @@ function [o]=impulseplot(varargin)
              pp=cell2mat(pp);
               ppr=real(pp)
              if or(ppr >= 0) then
-                  t=0:0.1:100
+                  dompol=max(ppr);
+                 tfinal=25/(dompol*log10(%e));
+                 t=0:0.1:tfinal;
              elseif and(ppr<0) then
                 y=csim('impuls',t,varargin(1)/varargin(2));
                  for iii=length(t):-1:1

@@ -7,6 +7,7 @@ function[varargout]=impulse(varargin)
 //impulse(poly1,poly2)
 //impulse(sys,Tfinal)
 //impulse(sys,Tvector)
+//impulse(SISOarray,%T)
 //impulse(sys1,sys2,...,T)
 //impulse(sys1,'r',sys2,'y--',sys3,'gx',..)
 //[Y,t]=impulse(sys)
@@ -45,9 +46,7 @@ function[varargout]=impulse(varargin)
 
 
     [lhs,rhs]=argn(0);
-    if rhs == 0 then
-        error(msprintf(gettext("Not enough input arguments")))
-        end
+    
     nd=length(varargout);
     ni=length(varargin);
     flag=0;
