@@ -17,6 +17,7 @@ sys=syslin(0.2,(s+2)/(s^4+3*s+12));
 y3=bandwidth(sys);
 //
 //SISO array --default dbdrop ("when passed through pid value of bandwidth will be nan or inf")
+aa=pid(rand(2,2),3,4,5);
 y4=bandwidth(aa,[],1);
 //SISO array with given dbdrop
 y5=bandwidth(aa,-4,1);
