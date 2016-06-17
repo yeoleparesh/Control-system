@@ -11,9 +11,15 @@
 function[fw]=bandwidth(sys,varargin)
    //[lhs,rhs]=argn(0);
    n=length(varargin);
-   if((n>=1 & ( varargin(1)==%nan | varargin(1)>0) ) | (n==2 & varargin(1)<>[])) then
-       error(msprintf(_("dbdrop must be real and negative:bandwidth")));
+   
+   if((n>=1 & ( varargin(1)==%nan | varargin(1)>0) ) ) then
+       if(n==2 & varargin(1)==[]) then
+       else
+           error(msprintf(_("dbdrop must be real and negative:bandwidth")));
+       end
+   
    end
+   
    
    if(n==0 | (n==2 & varargin(1)==[]))  then
        
