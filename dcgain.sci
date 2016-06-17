@@ -1,8 +1,12 @@
-//author:- Paresh Yeole
-//function is to find the dc gain of LTI system
+function[x]=dcgain(p)
+    //function is to find the dc gain of LTI system
 //k = dcgain(sys) computes the DC gain k of the LTI model sys.
 //DC gain is infinite for systems with integrators.
-function[x]=dcgain(p)
+//author:- Paresh Yeole emailid:-yeoleparesh@students.vnit.ac.in
+[lhs rhs]=argn(0);
+if rhs<1 then
+    error("dcgain:input parameter as a dynamic system is expected");
+end
     select typeof(p)
     case "rational" then
     case "state-space" then
