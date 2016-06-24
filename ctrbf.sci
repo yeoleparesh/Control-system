@@ -20,6 +20,22 @@ function [aout,bout,cout,t,k] = ctrbf(a, b, c, tol)
     //The number of controllable states is SUM(K).
     ///
     //
+    //If the controllability matrix of (A, B) has rank r ≤ n, where n is the size of A, then there exists a similarity transformation such that
+    //      _            _        _
+    //      A = T*A*T' , B = T*B, C = C*T'
+    //  where T is unitary, and the transformed system has a staircase form, in which the uncontrollable modes, if there are any, are in the upper left corner.
+    // 
+    //     _    _       _       _    _  _      _
+    //     A = | Auc  0  |,     B = | 0  |   , C = [Cnc Cc]
+    //         |_A21  Ac_|          |_Bc_| 
+    //
+    // where (Ac, Bc) is controllable, all eigenvalues of Auc are uncontrollable
+    //  Cc*((sI - Ac)^(-1))*Bc = C*((sI - A)^(-1))*B.
+    //[Aout,Bout,Cout,T,k] = ctrbf(A,B,C) decomposes the state-space system represented by A, B, and C into the controllability staircase form, Aout, Bout, and Cout, described above. 
+    //                          T is the similarity transformation matrix and k is a vector of length n, where n is the order of the system represented by A. Each entry of k represents 
+    //                          the number of controllable states factored out during each step of the transformation matrix calculation. The number of nonzero elements in k indicates 
+    //                          how many iterations were necessary to calculate T, and sum(k) is the number of states in Ac, the controllable portion of Aout.
+    //
     //Reference:-
     //  https://www8.cs.umu.se/~stefanj/pub/SJohansson05.pdf
     //
