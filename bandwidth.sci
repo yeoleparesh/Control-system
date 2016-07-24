@@ -1,15 +1,19 @@
-//author:- Rutuja Moharil & Paresh Yeole  
-//function is to find bandwidth of CT system,DT system,SS system for SISO type of systems only.
-//[fw]=bandwidth(sys,dbdrop) determines the bandwidth of the system at the given dbdrop. 
-//if array of siso system is to be passed then call as:-fw=bandwidth(sys,dbdrop,1)
-//"dbdrop must be negative value"
-//calling sequence:-
+
+function[fw]=bandwidth(sys,varargin)
+// 
+//Calling Sequence
 //fw=bandwidth(sys)   ----for SISO transfer function CT,DT and state space --dbdrop=-3db
 //fw=bandwidth(sys,dbdrop) --computes bandwidth at given dbdrop
 //fw=bandwidth(sys,[],1)   --for SISO array --dbdrop=-3db
 //fw=bandwidth(sys,dbdrop,1) ---for SISO array at given dbdrop
-function[fw]=bandwidth(sys,varargin)
-   //[lhs,rhs]=argn(0);
+//Description
+//function is to find bandwidth of CT system,DT system,SS system for SISO type of systems only.
+//[fw]=bandwidth(sys,dbdrop) determines the bandwidth of the system at the given dbdrop. 
+//if array of siso system is to be passed then call as:-fw=bandwidth(sys,dbdrop,1)
+//"dbdrop must be negative value"
+//Authors
+//Rutuja Moharil & Paresh Yeole 
+  
    n=length(varargin);
    
    if((n>=1 & ( varargin(1)==%nan | varargin(1)>0) ) ) then
