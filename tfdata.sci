@@ -1,11 +1,24 @@
 function[num,den,Ts]=tfdata(p)
-    //author:- Paresh Yeole
+//Calling Sequence
+//tfdata(TRANSFER FUNCTION)
+//[num,den,Ts] = tfdata(sys)
+//Parameters
+//num-coefficients of the numerator(s)
+//den-coefficients of the denominator(s)
+//Ts-sampling time
+//Description
 //[num,den,Ts] = tfdata(sys) returns coefficients of the numerator(s) and denominator(s) of the transfer function for the TF, SS and the sampling time of the system.
-//function -- tfdata(TRANSFER FUNCTION)
 //sampling time of the system can also be find out.
 //SISO , MIMO ,state-space,array of SISO,discrete time tf can be passed as a system to this function
 //o/p is the cell array of the coefficients for MIMO and SISO arrays.
-
+//Examples
+// s=poly(0,'s');
+// sysa=syslin('c',(s+2)/(s^2+2*s+3));
+// [num,den,Ts]=tfdata(sysa);
+//See also
+// dcgain,pole
+//Authors
+// Paresh Yeole
     [lhs,rhs]=argn(0)
     if rhs == 0 then
         error(msprintf(gettext("Not enough input arguments")))
