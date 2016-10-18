@@ -1,8 +1,7 @@
 function[varargout]=impulse(varargin)
-    //Author:- Paresh Yeole emailid:-yeoleparesh@students.vnit.ac.in
-//Gives the impulse response of continuos and discrete SISO as well as MIMO  systems  
-//
-//calling sequence:-
+    //
+///
+//calling Sequence:-
 //impulse(sys)
 //impulse(poly1,poly2)
 //impulse(sys,Tfinal)
@@ -16,7 +15,7 @@ function[varargout]=impulse(varargin)
 //Response uncertainty computation: 
 //[Y,T,X,YSD] = impulse(SYS)
 //
-//parameters:-
+//Parameters
 //sys:- sys can be SISO array,MIMO system or SISO either discrete or continuous
 //poly1:-numerator of the system
 //poly2:-denominator of the system
@@ -27,11 +26,14 @@ function[varargout]=impulse(varargin)
 //X:-state-Trajectory response vector.
 //YSD:- standard deviation YSD of the   response Y of an identified system SYS. YSD is empty if SYS does not  contain parameter covariance information.
 //
-// Note: In discrete time, IMPULSE computes the response to a unit-area 
+//Description 
+//Gives the impulse response of continuos and discrete SISO as well as MIMO  systems  
+
+//Note: In discrete time, IMPULSE computes the response to a unit-area 
 //  pulse of length Ts and height 1/Ts where Ts is the sample time. This
 //  pulse approaches the continuous-time Dirac impulse delta(t) as Ts goes
 //  to zero.
-//Examples:-
+//Examples
 //s=poly(0,'s');
 //sys=syslin('c',(s+3)/(s^3+4*s+2));
 //impulse(sys)   plots the impulse response of sys
@@ -43,7 +45,9 @@ function[varargout]=impulse(varargin)
 //impulse(sys,'--r',sys1,'gx')
 //aa=pid(rand(2,3,4),2,3,4);
 //impulse(aa,%T)
-
+//Authors 
+// Paresh Yeole 
+// emailid:-yeoleparesh@students.vnit.ac.in
 
     [lhs,rhs]=argn(0);
     
@@ -495,6 +499,7 @@ if(typeof(varargin(1))=='polynomial') then
              
          plot(t,G);
   end 
+
 else
    error('not enough arguments'); 
 end

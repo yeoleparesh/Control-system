@@ -1,11 +1,6 @@
 function [o]=impulseplot(varargin)
 
-//Author:- Paresh Yeole emailid:-yeoleparesh@students.vnit.ac.in
-//Gives the impulse response of continuos and discrete SISO as well as MIMO  systems  
-//impulseplot  Plot impulse response of linear systems.
-//impulseplot, an extension of IMPULSE, provides a command line interface for customizing the plot appearance.
-//
-//calling sequence:-
+//Calling Sequence
 //impulse(sys)
 //impulse(poly1,poly2)
 //impulse(sys,Tfinal)
@@ -13,7 +8,7 @@ function [o]=impulseplot(varargin)
 //impulse(sys1,sys2,...,T)
 //impulse(sys1,'r',sys2,'y--',sys3,'gx',..)
 //
-//parameters:-
+//Parameters
 //sys:- sys can be SISO array,MIMO system or SISO either discrete or continuous
 //poly1:-numerator of the system
 //poly2:-denominator of the system
@@ -21,12 +16,18 @@ function [o]=impulseplot(varargin)
 //Tvector:-time vector through which the response is to be plotted.For Discrete time, the sampling time must match the spacing of the given time vector.
 //o -handle of the figure plotted to customize the plot appearances
 //
+//Description
+//
+//Gives the impulse response of continuos and discrete SISO as well as MIMO  systems  
+//impulseplot  Plot impulse response of linear systems.
+//impulseplot, an extension of IMPULSE, provides a command line interface for customizing the plot appearance.
+//
 //
 // Note: In discrete time, IMPULSE computes the response to a unit-area 
 //  pulse of length Ts and height 1/Ts where Ts is the sample time. This
 //  pulse approaches the continuous-time Dirac impulse delta(t) as Ts goes
 //  to zero.
-////Examples:-
+//Examples
 //s=poly(0,'s');
 //sys=syslin('c',(s+3)/(s^3+4*s+2));
 //impulseplot(sys)   plots the impulse response of sys
@@ -36,6 +37,9 @@ function [o]=impulseplot(varargin)
 //impulseplot(sys,'--r',sys1,'gx')
 //aa=pid(rand(2,3,4),2,3,4);
 //impulseplot(aa,%T)
+//Authors 
+// Paresh Yeole 
+// emailid:-yeoleparesh@students.vnit.ac.in
   
     [lhs,rhs]=argn(0);
   
