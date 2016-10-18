@@ -1,18 +1,30 @@
-
 function[fw]=bandwidth(sys,varargin)
 // 
 //Calling Sequence
-//fw=bandwidth(sys)   ----for SISO transfer function CT,DT and state space --dbdrop=-3db
-//fw=bandwidth(sys,dbdrop) --computes bandwidth at given dbdrop
-//fw=bandwidth(sys,[],1)   --for SISO array --dbdrop=-3db
-//fw=bandwidth(sys,dbdrop,1) ---for SISO array at given dbdrop
+//  fw=bandwidth(sys)   ----for SISO transfer function CT,DT and state space --dbdrop=-3db
+//  fw=bandwidth(sys,dbdrop) --computes bandwidth at given dbdrop
+//  fw=bandwidth(sys,[],1)   --for SISO array --dbdrop=-3db
+//  fw=bandwidth(sys,dbdrop,1) ---for SISO array at given dbdrop
+//Parameters
+//  sys- SISO system which can be continuous as well as Discrete time . It can either be in transfer function form or state-space form.
+//  dbdrop - It is the desired drop at which the bandwidth has to be calculated.
 //Description
-//function is to find bandwidth of CT system,DT system,SS system for SISO type of systems only.
-//[fw]=bandwidth(sys,dbdrop) determines the bandwidth of the system at the given dbdrop. 
-//if array of siso system is to be passed then call as:-fw=bandwidth(sys,dbdrop,1)
-//"dbdrop must be negative value"
+//  function is to find bandwidth of CT system,DT system,SS system for SISO type of systems only.
+//  [fw]=bandwidth(sys,dbdrop) determines the bandwidth of the system at the given dbdrop. 
+//  if array of siso system is to be passed then call as:-fw=bandwidth(sys,dbdrop,1)
+//  Note:-"dbdrop must be negative value".
+//Examples
+//  1.a1=ssrand(1,1,2);
+//    y=bandwidth(a1);
+//  2.s=poly(0,'s');
+//    sys=syslin('c',(s+2)/(s^4+3*s+12));
+//    y2=bandwidth(sys);
+//See also
+//  horner,dcgain.
 //Authors
-//Rutuja Moharil & Paresh Yeole 
+//  Rutuja Moharil & Paresh Yeole 
+//Bibliography
+//  1. https://en.wikipedia.org/wiki/Bandwidth
   
    n=length(varargin);
    
@@ -229,4 +241,3 @@ if(fw==[]) then
     fw=%inf;
     end;
 endfunction
-    
