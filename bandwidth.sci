@@ -25,7 +25,10 @@ function[fw]=bandwidth(sys,varargin)
 //  Rutuja Moharil & Paresh Yeole 
 //Bibliography
 //  1. https://en.wikipedia.org/wiki/Bandwidth
-  
+  [lhs rhs]=argn(0);
+if rhs<1 then
+    error("bandwidth:input parameter as a dynamic system is expected");
+end
    n=length(varargin);
    
    if((n>=1 & ( varargin(1)==%nan | varargin(1)>0) ) ) then
@@ -56,6 +59,9 @@ case "rational" then
 case "state-space" then
         sys=ss2tf(sys)
         o=1;
+    case "constant" then
+        fw=0;
+        return;
 else
         msprintf("\n")
         error(97,1),
