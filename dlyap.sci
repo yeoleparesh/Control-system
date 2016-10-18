@@ -1,4 +1,8 @@
 function X = dlyap(A,B,C,E)
+//Calling Sequence
+//  X=dlyap(a,b)
+//  X=dlyap(a,b,c)
+//Description
 //    DLYAP  Solve discrete Lyapunov equations.
 //
 //   X = DLYAP(A,C) solves the discrete Lyapunov matrix equation:
@@ -16,10 +20,8 @@ function X = dlyap(A,B,C,E)
 //Note:-The discrete-time Lyapunov equation has a unique solution X, for any C = C'
 //      if and only if λi(A)λj(A)<>1, for i,j = 1, . . . , n.
 //
-//References:-
-//          http://stanford.edu/class/ee363/notes/lq-lyap-notes.pdf
 //
-////Examples:-
+//Examples
 //A = [3.0   1.0   1.0
 //      1.0   3.0   0.0
 //      0.0   0.0   3.0];
@@ -46,12 +48,27 @@ function X = dlyap(A,B,C,E)
 //
 // X = dlyap (A, B, C);
 //
-////Author:Paresh Yeole emailid:-yeoleparesh@students.vnit.ac.in
+//Authors 
+//  Paresh Yeole 
+//  emailid:-yeoleparesh@students.vnit.ac.in
+//Bibliography
+//          http://stanford.edu/class/ee363/notes/lq-lyap-notes.pdf
+
     [lhs rhs]=argn(0);
     select rhs
     case 2 then
+        if((size(A,'r')<>size(A,'c'))|(size(A,'r')<>(size(B,'r')))|(size(B,'r')<>(size(B,'c')))|(size(A,'c')<>(size(B,'c')))) then
+            error("In the dlyap(A,C) command, A and C must be square matrices of the same size.");
+        end
+        
         X=lyap(A.',-B,'d');
     case 3 then
+        if((size(A,'r')<>size(A,'c'))|(size(A,'r')<>(size(B,'r')))|(size(B,'r')<>(size(B,'c')))|(size(A,'c')<>(size(B,'c')))) then
+            error("In the dlyap(A,B,C) command, A ,B and C must have compatible sizes");
+        end
+        if((size(A,'r')<>size(A,'c'))|(size(A,'r')<>(size(C,'r')))|(size(C,'r')<>(size(C,'c')))|(size(C,'c')<>(size(C,'c')))) then
+            error("In the dlyap(A,B,C) command, A ,B and C must have compatible sizes");
+        end
         X=sylv(-A,B,C,'d');
     case 4 then
         if C<>[] then
@@ -60,7 +77,7 @@ function X = dlyap(A,B,C,E)
         
         X=lyap(inv(E)*(A.'),inv(E)*(-B),'d');
     else
-        error("dlyap:wrong no. of input arguments");
+        error("dlyap:wrong number of input arguments");
     end
     
        //X=linmeq(2,A,C,flag)
