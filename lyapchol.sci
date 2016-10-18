@@ -1,8 +1,9 @@
 function[w]=lyapchol(a,b,e)
-    //author:-Paresh Yeole
-//Dt:-May/2016
-//lyapnov function Compute Cholesky factor of "continuous-time" Lyapunov equations.
-
+//Calling Sequence
+//  R=lyapchol(A,B)
+//  R=lyapchol(A,B,E)
+//Description
+//lyapchol function Compute Cholesky factor of "continuous-time" Lyapunov equations.
 //
 //R=lyapchol(A,B)
 //A X  +  XA'  +  B B'  =  0           (Lyapunov Equation)
@@ -11,6 +12,23 @@ function[w]=lyapchol(a,b,e)
 //R=lyapchol(A,B,E)
 //A X E'  +  E XA'  +  B B'  =  0      (Generalized Lyapunov Equation)
 //X=R*R'
+//Examples
+//
+// 1.a  =[- 1.6602    1.0973; 1.0973  - 2.1947 ];
+//  b=[1.5442 ;0];
+//  r=lyapchol(a,b);
+//  r=[0.9591402    0.3183234 ;0.           0.2265428  ];
+//
+//
+// 2.a  =[- 1.6602    1.0973; 1.0973  - 2.1947 ];
+//   b=[1.5442 ;0];
+//   e=[0.8308    0.5497 ;0.5853    0.9172  ];
+//   r=lyapchol(a,b,e);
+//   r=[1.00442  - 0.0600239  ;0.         0.5714961  ];
+//See also
+// dlyap,dlyapchol
+//Authors
+ //Paresh Yeole
 [lhs rhs]=argn(0);
     if rhs<2  then
         error(msprintf(gettext("Not enough input arguments")));
@@ -44,16 +62,5 @@ end;
 endfunction
 
 
-//example:- @1
-//a  =[- 1.6602    1.0973; 1.0973  - 2.1947 ];
-//b=[1.5442 ;0];
-//r=lyapchol(a,b);
-//r=[0.9591402    0.3183234 ;0.           0.2265428  ];
-//
-//example:-@2
-//a  =[- 1.6602    1.0973; 1.0973  - 2.1947 ];
-//b=[1.5442 ;0];
-//e=[0.8308    0.5497 ;0.5853    0.9172  ];
-//r=lyapchol(a,b,e);
-//r=[1.00442  - 0.0600239  ;0.         0.5714961  ];
+
  
