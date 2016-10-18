@@ -1,6 +1,11 @@
 function[w]=dlyapchol(a,b,e)
+//
+//Calling Sequence
+//  R = dlyapchol(A,B)
+//  R = dlyapchol(A,B,E)
+//Description
 //dlyapchol function Compute Cholesky factor of "discrete-time" Lyapunov equations.
-
+//
 //R = dlyapchol(A,B) computes a Cholesky factorization X = R'*R of 
 //    the solution X to the Lyapunov matrix equation:
 // 
@@ -15,21 +20,23 @@ function[w]=dlyapchol(a,b,e)
 // 
 //    All generalized eigenvalues of (A,E) must lie in the open unit disk 
 //    for R to exist.
-//Examples:-
-//lyapunov equation
-//a  =[-0.25    0.25; 0.6 -0.4];
-//b=[1.5442;0];
-//r=dlyapchol(a,b)
-//generalized lyapunov equation
-//a  =[-0.25    0.25; 0.6 -0.4];
-//b=[1.5442;0];
-//e=[11 22 ;33 44];
-//r1=dlyapchol(a,b,e)
+//Examples
+//  lyapunov equation
+//  a  =[-0.25    0.25; 0.6 -0.4];
+//  b=[1.5442;0];
+//  r=dlyapchol(a,b)
+//  generalized lyapunov equation
+//  a  =[-0.25    0.25; 0.6 -0.4];
+//  b=[1.5442;0];
+//  e=[11 22 ;33 44];
+//  r1=dlyapchol(a,b,e)
 //
-//
+//See also
+// dlyap,lyapchol
 
-//Author:-Paresh Yeole 
-//emailid:-yeoleparesh@students.vnit.in
+//Authors
+//  Paresh Yeole 
+//  emailid:-yeoleparesh@students.vnit.in
 
 [lhs rhs]=argn(0);
     if rhs<2  then
@@ -44,6 +51,10 @@ case 2 then
     if(size(a,'r')<>size(b,'r')) then
         error(msprintf(_("\n lyapchol:A and B matrices must have same rows")));
     end
+    if(a==[]&b==[]) then
+        w=[];
+        return;
+    end
     
     [Gc]=ctr_gram(a,b,'d');
     w=chol(Gc);
@@ -54,6 +65,11 @@ case 3 then
     if((size(a,'r')<>size(b,'r')) | ((size(a,'r')<>size(e,'r')))) then
         error(msprintf(_("\n lyapchol:A , B,E matrices must have same rows")));
     end
+    if(a==[]&b==[]&c==[]) then
+        w=[];
+        return;
+    end
+    
     [Gc]=ctr_gram(inv(e)*a,inv(e)*b,'d');
     w=chol(Gc);
 else
