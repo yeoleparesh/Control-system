@@ -1,31 +1,33 @@
 function [output]=xperm(sys,perm)
-    //Function xperm
-    //Reorder states in state-space models
-    //
-    //Calling Sequence:-
-    //sys = xperm(sys,Permutation)
-    //
-    //Parameters:-
-    //sys:-
-    //      A state-space model of a linear dynamic system.
-    //Permuatation:-
-    //      The vector Permutation should be a permutation of 1:nx where nx is the number of states in SYS.
-    //
-    //Description:-
-    //  sys = xperm(sys,P) reorders the states of the state-space model sys according to the permutation P.
-    // The vector P is a permutation of 1:NX, where NX is the number of states in sys.
-    //
-    //Examples:-
+//    
+//    
+//    Calling Sequence
+//    sys = xperm(sys,Permutation)
+//    
+//    Parameters
+//    sys:-
+//          A state-space model of a linear dynamic system.
+//    Permuatation:-
+//          The vector Permutation should be a permutation of 1:nx where nx is the number of states in SYS.
+//    
+//    Description:-
+//          Function xperm
+//    Reorder states in state-space models
+//      sys = xperm(sys,P) reorders the states of the state-space model sys according to the permutation P.
+//     The vector P is a permutation of 1:NX, where NX is the number of states in sys.
+//    For information about creating state-space models, see ssrand,syslin.
+    //Examples
     //      aa=ssrand(2,3,2);
     //      ss=xperm(aa,[2 1]) 
     //      aa1=ssrand(3,6,8);
     //      ss1=xperm(aa1,[2 5 6 1 4 3 7 8]) 
     //
-    //See Also:-
-    //       For information about creating state-space models, see ssrand and syslin.
+    //See Also
+    //       ssrand,syslin.
     //
     //Authors
-    //  Paresh Yeole emailid:-yeoleparesh@students.vnit.ac.in
+    //  Paresh Yeole 
+    //  emailid:-yeoleparesh@students.vnit.ac.in
     
     
     
