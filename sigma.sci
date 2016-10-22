@@ -1,4 +1,42 @@
 function [output,w]=sigma(varargin)
+//Calling Sequence
+// sigma(sys)
+// sigma(sys,{Wmin,Wmax})
+// sigma(sys,W)
+// sigma(sys1,sys2,sys3,sys4,...,W)
+// [V,W]=sigma(sys)
+//
+//Parameters
+// sys - dynamic system
+// Wmin - Minimum frequency in radians/unit from which the singular values of the system are to be calculated.
+// Wmax - Maximum frequency in radians/unit upto which the singular values of the system are to be calculated.
+// W - Range of frequencies in which the singular values of the system has to be calculated.
+// V - Singular values of the systems in the range of frequency W.
+//
+//Description
+// Sigma function plots or calculates Singular values of dynamic systems.
+// When frequency range is not specified, it is chosen automatically.
+//
+//Examples
+// s=%s;
+// sys=syslin('c',1/(1+s));
+// sigma(sys)
+// sigma(sys,sys^2)
+// sigma(sys,20:40)
+//
+//See also
+// sigmaplot,bode.
+//
+//Authors
+// Paresh Yeole
+// email-id:- yeoleparesh@students.vnit.ac.in
+
+
+
+
+
+
+
     [lhs,rhs]=argn(0);
      x=logspace(-3,3);
     //________________if freq vector or freqfinal is given//__________________//________________//
