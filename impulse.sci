@@ -425,7 +425,7 @@ elseif ((typeof(varargin(i))=='rational') & (size(varargin(i),'*')<>1)) then
         end
     h=gcf();
     h.figure_name= "IMPULSE-PLOT"; 
-    
+    xtitle("Impulse-Response","Time(seconds)","Amplitude");
     ///////////////////more than 1 o/p arguments/////////////////////////////////////////////////////////
 elseif lhs>1 then
         

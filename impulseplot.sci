@@ -451,7 +451,7 @@ end
     
     o=gcf();
     o.figure_name='IMPULSE-PLOT'
-    
+     xtitle("Impulse-Response","Time(seconds)","Amplitude");
     
     
 endfunction
